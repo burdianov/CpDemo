@@ -1,10 +1,13 @@
 package com.crackncrunch.cpdemo;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.crackncrunch.cpdemo.data.NationDbHelper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -13,6 +16,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             etQueryRowById, etWhereToDelete;
     private Button btnInsert, btnUpdate, btnDelete, btnQueryRowById,
             btnDisplayAll;
+
+    private SQLiteDatabase database;
+    private NationDbHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnDelete.setOnClickListener(this);
         btnQueryRowById.setOnClickListener(this);
         btnDisplayAll.setOnClickListener(this);
+
+        databaseHelper = new NationDbHelper(this);
+        database = databaseHelper.getWritableDatabase();
     }
 
     @Override
@@ -78,5 +87,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void queryAndDisplayAll() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        database.close();
+        super.onDestroy();
     }
 }
